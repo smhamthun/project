@@ -1,10 +1,625 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7fb">
+    <title>Sign in | Northstar</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #172033;
+            background: #f5f7fb;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            --muted: #788196;
+            --line: #e4e8f0;
+            --accent: #5b5ce2;
+        }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 32px;
+            background:
+                radial-gradient(ellipse at 12% 10%, rgba(111, 124, 255, 0.11), transparent 34%),
+                radial-gradient(ellipse at 92% 88%, rgba(69, 196, 184, 0.10), transparent 30%),
+                #f5f7fb;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .login-shell {
+            width: min(100%, 1040px);
+            min-height: 650px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            border: 1px solid rgba(226, 231, 241, 0.9);
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 28px 80px rgba(37, 48, 80, 0.12);
+        }
+
+        .welcome-panel {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            padding: 42px 44px;
+            color: #fff;
+            background:
+                radial-gradient(circle at 78% 24%, rgba(151, 164, 255, 0.45), transparent 28%),
+                linear-gradient(145deg, #242b63 0%, #4547a6 55%, #6964dc 100%);
+        }
+
+        .welcome-panel::before,
+        .welcome-panel::after {
+            position: absolute;
+            content: "";
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .welcome-panel::before {
+            width: 430px;
+            height: 430px;
+            right: -210px;
+            bottom: -180px;
+        }
+
+        .welcome-panel::after {
+            width: 330px;
+            height: 330px;
+            right: -160px;
+            bottom: -130px;
+        }
+
+        .brand,
+        .welcome-copy,
+        .panel-footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand {
+            display: inline-flex;
+            width: fit-content;
+            align-items: center;
+            gap: 11px;
+            color: inherit;
+            font-size: 17px;
+            font-weight: 750;
+            letter-spacing: -0.04em;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .brand-mark svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .welcome-copy {
+            max-width: 390px;
+            margin-top: 40px;
+        }
+
+        .eyebrow {
+            margin: 0 0 16px;
+            color: #d7d9ff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        .welcome-copy h1 {
+            margin: 0;
+            font-size: clamp(36px, 4vw, 49px);
+            font-weight: 650;
+            letter-spacing: -0.055em;
+            line-height: 1.08;
+        }
+
+        .welcome-copy > p:last-child {
+            max-width: 340px;
+            margin: 20px 0 0;
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .quote-card {
+            max-width: 375px;
+            margin-top: 58px;
+            padding: 18px 19px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(8px);
+        }
+
+        .quote-card p {
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .quote-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .avatar {
+            display: grid;
+            width: 31px;
+            height: 31px;
+            place-items: center;
+            border-radius: 50%;
+            background: #e8c5ac;
+            color: #58402f;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .quote-author span:last-child {
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .quote-author strong {
+            display: block;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .panel-footer {
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 11px;
+        }
+
+        .form-panel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 52px clamp(32px, 6vw, 72px);
+        }
+
+        .form-content {
+            width: 100%;
+            max-width: 370px;
+        }
+
+        .mobile-brand {
+            display: none;
+            margin-bottom: 42px;
+            color: #202744;
+        }
+
+        .mobile-brand .brand-mark {
+            border-color: #e6e8f2;
+            background: #f0f0ff;
+            color: var(--accent);
+        }
+
+        .form-heading h2 {
+            margin: 0;
+            font-size: 29px;
+            font-weight: 700;
+            letter-spacing: -0.045em;
+        }
+
+        .form-heading p {
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .social-button,
+        .primary-button {
+            display: flex;
+            width: 100%;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 650;
+            transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+        }
+
+        .social-button {
+            margin-top: 28px;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: #273149;
+        }
+
+        .social-button:hover {
+            border-color: #c9cedd;
+            background: #fafbfe;
+        }
+
+        .social-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 25px 0;
+            color: #9aa2b2;
+            font-size: 11px;
+        }
+
+        .divider::before,
+        .divider::after {
+            height: 1px;
+            flex: 1;
+            background: var(--line);
+            content: "";
+        }
+
+        .field {
+            margin-top: 19px;
+        }
+
+        .label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        label {
+            color: #30394f;
+            font-size: 12px;
+            font-weight: 650;
+        }
+
+        .text-link {
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 650;
+            text-decoration: none;
+        }
+
+        .text-link:hover {
+            text-decoration: underline;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            height: 47px;
+            padding: 0 14px;
+            border: 1px solid #dfe3ec;
+            border-radius: 8px;
+            outline: none;
+            background: #fff;
+            color: #1d263b;
+            font-size: 13px;
+            transition: border-color 160ms ease, box-shadow 160ms ease;
+        }
+
+        .input-wrap input::placeholder {
+            color: #a4abba;
+        }
+
+        .input-wrap input:focus {
+            border-color: #7778e9;
+            box-shadow: 0 0 0 3px rgba(91, 92, 226, 0.12);
+        }
+
+        .input-wrap input[aria-invalid="true"] {
+            border-color: #cf4858;
+        }
+
+        .password-input {
+            padding-right: 67px !important;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            padding: 5px;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: #747d90;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 650;
+        }
+
+        .toggle-password:hover {
+            color: #343c55;
+        }
+
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 18px 0 23px;
+        }
+
+        .checkbox-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #667087;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .checkbox-label input {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            accent-color: var(--accent);
+        }
+
+        .primary-button {
+            border: 0;
+            background: linear-gradient(110deg, #5558d8, #7371e8);
+            box-shadow: 0 7px 16px rgba(87, 88, 216, 0.18);
+            color: #fff;
+        }
+
+        .primary-button:hover {
+            box-shadow: 0 9px 20px rgba(87, 88, 216, 0.28);
+            transform: translateY(-1px);
+        }
+
+        .primary-button:active {
+            transform: translateY(0);
+        }
+
+        .signup-prompt {
+            margin: 22px 0 0;
+            color: #7d8597;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .signup-prompt .text-link {
+            margin-left: 3px;
+            font-size: 12px;
+        }
+
+        .form-note {
+            min-height: 18px;
+            margin: 13px 0 0;
+            color: #a0a6b4;
+            font-size: 10px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .form-note[data-state="error"] {
+            color: #b52e42;
+        }
+
+        .form-note[data-state="success"] {
+            color: #21815d;
+        }
+
+        :focus-visible {
+            outline: 3px solid rgba(91, 92, 226, 0.4);
+            outline-offset: 3px;
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 20px;
+            }
+
+            .login-shell {
+                width: min(100%, 470px);
+                min-height: 0;
+                grid-template-columns: 1fr;
+                border-radius: 19px;
+            }
+
+            .welcome-panel {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 38px clamp(24px, 8vw, 44px);
+            }
+
+            .mobile-brand {
+                display: inline-flex;
+            }
+        }
+
+        @media (max-width: 380px) {
+            body {
+                padding: 12px;
+            }
+
+            .form-panel {
+                padding: 30px 21px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
 <body>
-    <h1>Git Training</h1>
-    <p>This is a test</p>
-    <p>This is a test 2</p>
-</body>
+    <main class="login-shell">
+        <aside class="welcome-panel" aria-label="About Northstar">
+            <a class="brand" href="#" aria-label="Northstar home">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2.8 14.5 9.5 21.2 12l-6.7 2.5L12 21.2l-2.5-6.7L2.8 12l6.7-2.5L12 2.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                        <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                    </svg>
+                </span>
+                Northstar
+            </a>
 
+            <div class="welcome-copy">
+                <p class="eyebrow">Your work, in focus</p>
+                <h1>A clearer path to your best work.</h1>
+                <p>Bring your team and ideas together. Sign in to pick up right where you left off.</p>
+
+                <div class="quote-card">
+                    <p>“Northstar gives our team a calm, clear place to turn good ideas into great work.”</p>
+                    <div class="quote-author">
+                        <span class="avatar" aria-hidden="true">JM</span>
+                        <span><strong>Jordan Miller</strong>Product lead</span>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="panel-footer">© <span id="current-year"></span> Northstar, Inc.</footer>
+        </aside>
+
+        <section class="form-panel" aria-labelledby="login-title">
+            <div class="form-content">
+                <a class="brand mobile-brand" href="#" aria-label="Northstar home">
+                    <span class="brand-mark" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2.8 14.5 9.5 21.2 12l-6.7 2.5L12 21.2l-2.5-6.7L2.8 12l6.7-2.5L12 2.8Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                            <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    Northstar
+                </a>
+
+                <header class="form-heading">
+                    <h2 id="login-title">Welcome back</h2>
+                    <p>Enter your details to sign in to your account.</p>
+                </header>
+
+                <button class="social-button" id="google-sign-in" type="button">
+                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill="#4285F4" d="M19.6 10.23c0-.68-.06-1.36-.18-2.02H10v3.83h5.39a4.62 4.62 0 0 1-2 3.03v2.48h3.24c1.9-1.75 2.97-4.34 2.97-7.32Z"/>
+                        <path fill="#34A853" d="M10 20c2.7 0 4.97-.9 6.63-2.45l-3.24-2.48c-.9.6-2.06.95-3.39.95-2.6 0-4.8-1.76-5.59-4.13H1.07v2.56A10 10 0 0 0 10 20Z"/>
+                        <path fill="#FBBC05" d="M4.41 11.89a6.01 6.01 0 0 1 0-3.78V5.55H1.07a10 10 0 0 0 0 8.9l3.34-2.56Z"/>
+                        <path fill="#EA4335" d="M10 3.98c1.47 0 2.79.5 3.82 1.52l2.87-2.87A9.6 9.6 0 0 0 10 0a10 10 0 0 0-8.93 5.55l3.34 2.56C5.2 5.74 7.4 3.98 10 3.98Z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+
+                <div class="divider" aria-hidden="true">or continue with email</div>
+
+                <form id="login-form">
+                    <div class="field">
+                        <div class="label-row">
+                            <label for="email">Email address</label>
+                        </div>
+                        <div class="input-wrap">
+                            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <div class="label-row">
+                            <label for="password">Password</label>
+                            <a class="text-link" href="#" data-message="Password reset is not connected yet.">Forgot password?</a>
+                        </div>
+                        <div class="input-wrap">
+                            <input class="password-input" id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" minlength="8" required>
+                            <button class="toggle-password" id="toggle-password" type="button" aria-controls="password" aria-pressed="false">Show</button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label" for="remember-me">
+                            <input id="remember-me" name="remember-me" type="checkbox">
+                            Remember me
+                        </label>
+                        <a class="text-link" href="#" data-message="Contact your team administrator to get an account.">Need help?</a>
+                    </div>
+
+                    <button class="primary-button" type="submit">Sign in</button>
+                    <p class="form-note" id="form-message" role="status" aria-live="polite"></p>
+                </form>
+
+                <p class="signup-prompt">Don't have an account?<a class="text-link" href="#" data-message="Account creation is not connected yet.">Create an account</a></p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("toggle-password");
+        const loginForm = document.getElementById("login-form");
+        const formMessage = document.getElementById("form-message");
+
+        document.getElementById("current-year").textContent = new Date().getFullYear();
+
+        togglePassword.addEventListener("click", () => {
+            const isPasswordHidden = passwordInput.type === "password";
+            passwordInput.type = isPasswordHidden ? "text" : "password";
+            togglePassword.textContent = isPasswordHidden ? "Hide" : "Show";
+            togglePassword.setAttribute("aria-pressed", String(isPasswordHidden));
+        });
+
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            formMessage.dataset.state = "success";
+            formMessage.textContent = "Form is ready. Connect your authentication service to sign in.";
+        });
+
+        document.querySelectorAll("[data-message]").forEach((link) => {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                formMessage.dataset.state = "";
+                formMessage.textContent = link.dataset.message;
+            });
+        });
+
+        document.getElementById("google-sign-in").addEventListener("click", () => {
+            formMessage.dataset.state = "";
+            formMessage.textContent = "Google sign-in is not connected yet.";
+        });
+    </script>
+</body>
 </html>
